@@ -1,7 +1,4 @@
-*.css
 *.css.map
-*.min.css
-*.min.js
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
