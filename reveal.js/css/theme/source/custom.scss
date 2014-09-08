@@ -76,6 +76,16 @@ $headingTextTransform: none;
 // .reveal h3 { font-size: 1.55em;	}
 // .reveal h4 { font-size: 1em;	}
 
+.unittest {
+	background-color: #ddd;
+}
+.nose {
+	background-color: #ff8;
+}
+.pytest {
+	background-color: #ccf;
+}
+
 // Theme template ------------------------------
 @import "../template/theme";
 // ---------------------------------------------

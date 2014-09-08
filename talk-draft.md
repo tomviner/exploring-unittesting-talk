@@ -6,6 +6,8 @@ A PyConUK talk by [Tom Viner](http://tomviner.co.uk) /
 
 ---
 
+## Coming up:
+
 - Our three test frameworks
 - Some features of unit-testing
     - running your tests
@@ -19,6 +21,11 @@ A PyConUK talk by [Tom Viner](http://tomviner.co.uk) /
     - next level: marking your params
 
 ---
+
+Our three test frameworks
+=========================
+
+***
 
 # unittest <!-- .element: class="unittest" -->
 
@@ -39,16 +46,18 @@ A PyConUK talk by [Tom Viner](http://tomviner.co.uk) /
 
 ---
 
-We'll look at several features of unit-testing and how they're covered by our frameworks
+Features of unit-testing
+========================
+## and how they're covered by our frameworks
 
+***
+## a minimal test: with *class* or *function*?
 ***
 ## running your tests from the command line
 
     py.test
 
 
-***
-## a minimal test: with class or function?
 ***
 ## setting up the environment for a test, and clearing up afterwards
 ***
@@ -58,8 +67,12 @@ We'll look at several features of unit-testing and how they're covered by our fr
 
 ---
 
-In the remaining time we'll move on to some more advanced techniques:
+Advanced techniques
+===================
+## not available in all 3 frameworks
+
 ***
+
 ## parameterised test generators
 ***
 ## skipping and xfails
