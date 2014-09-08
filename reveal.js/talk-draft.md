@@ -25,22 +25,21 @@ A PyConUK talk by [Tom Viner](http://tomviner.co.uk) /
 Our three test frameworks
 =========================
 
-***
+*** <!-- .slide: class="unittest" -->
 
-# unittest <!-- .element: class="unittest" -->
+# unittest
 
 - sometimes called PyUnit
 - `xUnit` origins
 
-***
+*** <!-- .slide: class="nose" -->
 
-# nose <!-- .element: class="nose" -->
+# nose
 
-- nose: "extends unittest to make testing easier"
+- *extends `unittest` to make testing easier*
 
-***
-
-# pytest <!-- .element: class="pytest" -->
+*** <!-- .slide: class="pytest" -->
+# pytest
 
 - pytest: more pythonic tests?
 
