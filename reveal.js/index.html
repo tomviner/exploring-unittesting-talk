@@ -4,10 +4,10 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>reveal.js - The HTML Presentation Framework</title>
+		<title>Exploring unit-testing with unittest, nose and pytest - Tom Viner</title>
 
-		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
-		<meta name="author" content="Hakim El Hattab">
+		<meta name="description" content="Exploring unit-testing with unittest, nose and pytest A 2014 PyConUK talk by Tom Viner / @tomviner">
+		<meta name="author" content="Tom Viner">
 
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -43,10 +43,13 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 				<section data-markdown="talk-draft.md"
-				         data-separator="^---"
-				         data-vertical="^\*\*\*"
-				         data-notes="^Note:"
-				         data-charset="utf-8">
+						 data-separator="^---"
+						 data-vertical="^\n\n"
+						 data-not="^\s*?--\s(.*?)$"
+						 data-not-attributes="\{\.\s*?([^}]+?)\}"
+						 data-not-element-attributes="\{\.\.\s*?([^}]+?)\}"
+						 data-notes="^Note:"
+						 data-charset="utf-8">
 				</section>
 			</div>
 
@@ -79,11 +82,11 @@
 					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
 					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
 					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
-					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: '//'+location.hostname+':35729/livereload.js', async: true }
 				]
 			});
 
 		</script>
-		<script src="//localhost:35729/livereload.js"></script>
 	</body>
 </html>
