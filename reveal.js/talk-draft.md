@@ -75,12 +75,15 @@ How should we test this silly example?
 
 ### nose
 
-    $ nosetests test_simple:TestAdd
+    import nose
+
+    def test_add():
+        nose.tools.assert_equal(add(1, 1), 2)
 
 ### pytest
 
-    def test_add(self):
-        self.assertEqual(add(1, 1), 2)
+    def test_add():
+        assert add(1, 1) == 2
 
 
 
@@ -88,15 +91,18 @@ How should we test this silly example?
 
 ### unittest
 
-    $ python -m unittest test_simple.TestAdd
+    $ python -m unittest test_unittest_examples.TestAdd
 
 ### nose
 
-    $ nosetests test_simple:TestAdd
+    $ nosetests test_unittest_examples:TestAdd
+    $ nosetests test_nose_examples.py
 
 ### pytest
 
-    $ py.test test_simple.py::TestAdd
+    $ py.test test_unittest_examples.py::TestAdd
+    $ py.test test_nose_examples.py
+    $ py.test test_pytest_examples.py
 
 Note the default is to find `by/file/path` not `dotted.module.path`, so your shell tab complete works
 
@@ -147,6 +153,16 @@ Unittest2 (i.e. unittest in Python>=2.7) adds:
 
 nose
 
+    def setup_func():
+        "set up test fixtures"
+
+    def teardown_func():
+        "tear down test fixtures"
+
+    @with_setup(setup_func, teardown_func)
+    def test():
+        "test ..."
+
 
 pytest
 
@@ -179,7 +195,7 @@ Combine fixtures, here with a tighter scope
 
     @pytest.fixture(scope='function')
     def db_table(db_conn):
-        return = create_table(db_conn, 'foo')
+        return create_table(db_conn, 'foo')
 
 Then just name the 2nd fixture as a *funcarg*:
 
@@ -197,27 +213,7 @@ Then just name the 2nd fixture as a *funcarg*:
     - reusable beyond a single class, possibly even share between projects
 
 
-
-# Cachable via `scope`
-
-Allows caching of fixture over session/module/function (default)
-
-    @pytest.fixture(scope='session')
-    def db_conn():
-        return create_db_conn()
-
-# Combine fixtures, here with a tighter scope
-
-    @pytest.fixture(scope='module')
-    def db_table(request, db_conn):
-        table = create_table(db_conn, 'foo')
-        def fin():
-            drop_table(db_conn, table)
-        request.addfinalizer(fin)
-        return table
-
-
-## Finalizer
+## pytest fixture finalizers
 
     @pytest.fixture(scope="module")
     def smtp(request):
@@ -243,24 +239,66 @@ Alternate syntax to use a yield fixture
         smtp.close()
 
 
-
-
-
 ## happy path: asserting the expected truth
 unittest
 
+    self.assertThisThatEtc(result, expect)
+
 nose
 
+    nose.tools.assert_this_that_etc(result, expect)
+
 pytest
+
+    assert result == expect
+    assert result != expect
+
+
+### pytest naked assert
+
+    def test_add():
+        a = 1
+        b = 2
+        expected = 4
+        assert add(a, b) + add(b, b) == expected
+
+Test resultw
+
+        def test_add():
+            a = 1
+            b = 2
+            expected = 4
+    >       assert add(a, b) + add(b, b) == expected
+    E       assert (3 + 4) == 4
+    E        +  where 3 = add(1, 2)
+    E        +  and   4 = add(2, 2)
+
+    test_pytest_examples.py:12: AssertionError
+
 
 
 ## provoking failure: ensuring exceptions raised
 
 unittest
 
+    class TestAdd(unittest.TestCase):
+        def test_validation(self):
+            self.assertRaises(TypeError, add, ('a', 1))
+
 nose
 
+    def test_validation():
+        nose.tools.assert_raises(TypeError, add, ('a', 1))
+
+    @nose.tools.raises(TypeError)
+    def test_validation():
+        pass
+
 pytest
+
+    def test_validation():
+        with pytest.raises(TypeError):
+            add('a', 1)
 
 ---
 
@@ -269,15 +307,12 @@ Advanced techniques
 ## not available in all 3 frameworks
 
 
-unittest
-
-nose
-
-pytest
-
-
 ## parameterised test generators
-unittest
+
+
+### unittest
+
+    [insert ammusing example of people trying this with unittest]
 
 
 ### nose
@@ -315,23 +350,50 @@ example from http://codeinthehole.com/writing/purl-uri-templates-and-generated-t
         assert expand(template, fields) ==  expected
 
 
+### Paramatisation of fixtures
+
+re-run tests with different resources
+
+    @pytest.fixture(params=[MySQL(), Postgres()])
+    def db(request):
+        return request.param
+
+
 ## skipping and xfails
 unittest
 
-nose
+    class MyTestCase(unittest.TestCase):
 
-pytest
-
-
-## next level: marking your params
-unittest
+        @unittest.skip("demonstrating skipping")
+        def test_nothing(self):
+            self.fail("shouldn't happen")
 
 nose
 
+    from nose.tools import nottest
+
+    @nottest
+    def test_my_sample_test()
+        #code here ...
+
 pytest
+
+    db_params = (
+        MySQL(),
+        pytest.mark.xfail(Postgres(), reason="psql not supported yet")
+    )
+    @pytest.fixture(params=db_parms)
+    def db(request):
+        return request.param
+
+
+## testing the code in this talk
+
+- live demo!
 
 
 More for another talk
 =====================
+- Marking your params
 - Django Integration
 - Integration with `python setup.py test`
