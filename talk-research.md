@@ -1,54 +1,54 @@
-### Ideas
+# Ideas
 
 colour code by framework
 
 ### Slides
-- [http://lab.hakim.se/reveal-js/]()
-- [https://github.com/hakimel/reveal.js#markdown]()
-- editor: [http://slides.com/]()
+- [lab.hakim.se/reveal-js/](http://lab.hakim.se/reveal-js/)
+- [github.com/hakimel/reveal.js#markdown](https://github.com/hakimel/reveal.js#markdown)
+- editor: [slides.com/](http://slides.com/)
 
-EuroPython talks:
-- [https://www.youtube.com/user/europython2014]()
-- [https://ep2014.europython.eu/en/schedule/sessions/100/]()
--- [https://speakerdeck.com/pelme/introduction-to-pytest]()
-- [https://ep2014.europython.eu/en/schedule/sessions/168/]()
--- [http://devork.be/talks/advanced-fixtures/advfix.html]()
-- [https://ep2014.europython.eu/en/schedule/sessions/92/]()
--- [http://merlinux.eu/~hpk/]()
--- file:///home/tom/Dropbox/DellXPS-backup/dev/pytest-training/testing.pdf
+### EuroPython talks
+- [www.youtube.com/user/europython2014](https://www.youtube.com/user/europython2014)
+- [ep2014.europython.eu/en/schedule/sessions/100/](https://ep2014.europython.eu/en/schedule/sessions/100/)
+    - [speakerdeck.com/pelme/introduction-to-pytest](https://speakerdeck.com/pelme/introduction-to-pytest)
+- [ep2014.europython.eu/en/schedule/sessions/168/](https://ep2014.europython.eu/en/schedule/sessions/168/)
+    - [devork.be/talks/advanced-fixtures/advfix.html](http://devork.be/talks/advanced-fixtures/advfix.html)
+- [ep2014.europython.eu/en/schedule/sessions/92/](https://ep2014.europython.eu/en/schedule/sessions/92/)
+    - [merlinux.eu/~hpk/](http://merlinux.eu/~hpk/)
+    - pytest-training/testing.pdf
 
 ### unittest
-- [http://pyunit.sourceforge.net/]()
-- [http://pyunit.sourceforge.net/pyunit.html]()
-- [https://docs.python.org/2/library/unittest.html]()
-- [http://www.voidspace.org.uk/python/articles/unittest2.shtml]()
+- [pyunit.sourceforge.net/](http://pyunit.sourceforge.net/)
+- [pyunit.sourceforge.net/pyunit.html](http://pyunit.sourceforge.net/pyunit.html)
+- [docs.python.org/2/library/unittest.html](https://docs.python.org/2/library/unittest.html)
+- [www.voidspace.org.uk/python/articles/unittest2.shtml](http://www.voidspace.org.uk/python/articles/unittest2.shtml)
 
 ### nose
-- nose: [https://nose.readthedocs.org]()
-- nose2: [http://nose2.readthedocs.org]()
+- nose: [nose.readthedocs.org](https://nose.readthedocs.org)
+- nose2: [nose2.readthedocs.org](http://nose2.readthedocs.org)
 
 ### compare
-- [http://nose2.readthedocs.org/en/latest/differences.html]()
-- [http://sebastianraschka.com/Articles/2013_python_unittest.html]()
-- [http://halfcooked.com/presentations/pyconau2013/why_I_use_pytest.html]()
-- [http://pythontesting.net/framework/specify-test-unittest-nosetests-pytest/]()
-- [http://pydanny.com/pytest-no-boilerplate-testing-2.html]()
-- [http://stackoverflow.com/questions/191673/preferred-python-unit-testing-framework]()
-- [http://docs.python-guide.org/en/latest/writing/tests/]()
+- [nose2.readthedocs.org/en/latest/differences.html](http://nose2.readthedocs.org/en/latest/differences.html)
+- [sebastianraschka.com/Articles/2013_python_unittest.html](http://sebastianraschka.com/Articles/2013_python_unittest.html)
+- [halfcooked.com/presentations/pyconau2013/why_I_use_pytest.html](http://halfcooked.com/presentations/pyconau2013/why_I_use_pytest.html)
+- [pythontesting.net/framework/specify-test-unittest-nosetests-pytest/](http://pythontesting.net/framework/specify-test-unittest-nosetests-pytest/)
+- [pydanny.com/pytest-no-boilerplate-testing-2.html](http://pydanny.com/pytest-no-boilerplate-testing-2.html)
+- [stackoverflow.com/questions/191673/preferred-python-unit-testing-framework](http://stackoverflow.com/questions/191673/preferred-python-unit-testing-framework)
+- [docs.python-guide.org/en/latest/writing/tests/](http://docs.python-guide.org/en/latest/writing/tests/)
 
 ### pythonic
-- [http://www.peterbe.com/plog/to-assert-or-assertEqual]()
+- [www.peterbe.com/plog/to-assert-or-assertEqual](http://www.peterbe.com/plog/to-assert-or-assertEqual)
 
 ### unittest benefits
 pytest almost equal
 
 ### xunit
-- [http://www.martinfowler.com/bliki/Xunit.html]()
+- [www.martinfowler.com/bliki/Xunit.html](http://www.martinfowler.com/bliki/Xunit.html)
 
 ### param
-- [http://nose2.readthedocs.org/en/latest/params.html#nose2.tools.params]()
+- [nose2.readthedocs.org/en/latest/params.html#nose2.tools.params](http://nose2.readthedocs.org/en/latest/params.html#nose2.tools.params)
 ### test generators
-- [http://nose2.readthedocs.org/en/latest/plugins/generators.html]()
+- [nose2.readthedocs.org/en/latest/plugins/generators.html](http://nose2.readthedocs.org/en/latest/plugins/generators.html)
 
 ### parameterised test generators
-- [http://stackoverflow.com/a/3772008/15890]()
+- [stackoverflow.com/a/3772008/15890](http://stackoverflow.com/a/3772008/15890)
