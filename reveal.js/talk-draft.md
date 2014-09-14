@@ -98,6 +98,9 @@ How should we test this silly example?
     $ nosetests test_unittest_examples:TestAdd
     $ nosetests test_nose_examples.py
 
+    $ nose2 test_unittest_examples.TestAdd
+    $ nose2 test_nose_examples
+
 ### pytest
 
     $ py.test test_unittest_examples.py::TestAdd
@@ -152,6 +155,8 @@ Unittest2 (i.e. unittest in Python>=2.7) adds:
 
 
 nose
+
+    from nose.tools import with_setup
 
     def setup_func():
         "set up test fixtures"
@@ -242,16 +247,24 @@ Alternate syntax to use a yield fixture
 ## happy path: asserting the expected truth
 unittest
 
-    self.assertThisThatEtc(result, expect)
+    self.assertTrue
+    self.assertEqual
+    self.assertIsNotNone
+    self.assertGreaterEqual
 
 nose
 
-    nose.tools.assert_this_that_etc(result, expect)
+    nose.tools.assert_greater_equal(result, expected)
 
 pytest
 
-    assert result == expect
-    assert result != expect
+    def add(a, b):
+        return a + b
+
+    assert result == expected
+    assert result2 != expected
+    a, b = 3, -1
+    assert add(a, b) + add(b, b) == expected
 
 
 ### pytest naked assert
@@ -262,18 +275,18 @@ pytest
         expected = 4
         assert add(a, b) + add(b, b) == expected
 
-Test resultw
+Test result
 
         def test_add():
             a = 1
             b = 2
             expected = 4
-    >       assert add(a, b) + add(b, b) == expected
-    E       assert (3 + 4) == 4
-    E        +  where 3 = add(1, 2)
-    E        +  and   4 = add(2, 2)
-
-    test_pytest_examples.py:12: AssertionError
+    # >       assert add(a, b) + add(b, b) == expected
+    # E       assert (3 + 4) == 4
+    # E        +  where 3 = add(1, 2)
+    # E        +  and   4 = add(2, 2)
+    #
+    # test_pytest_examples.py:12: AssertionError
 
 
 
@@ -292,7 +305,12 @@ nose
 
     @nose.tools.raises(TypeError)
     def test_validation():
-        pass
+        add('a', 1)
+
+    def test_validation():
+        with nose.tools.raises(TypeError):
+            add('a', 1)
+
 
 pytest
 
@@ -312,7 +330,7 @@ Advanced techniques
 
 ### unittest
 
-    [insert ammusing example of people trying this with unittest]
+    # insert ammusing example of people trying this with unittest
 
 
 ### nose
@@ -344,8 +362,15 @@ example from http://codeinthehole.com/writing/purl-uri-templates-and-generated-t
 ### pytest
 
     import pytest
-
-    @pytest.mark.parametrize(("template", "fields", "expected"), data)
+    level1_vars = {
+        'var': 'value',
+        'hello': 'Hello World!',
+    }
+    test_data = [
+        ('{var}', level1_vars, 'value'),
+        ('{hello}', level1_vars, 'Hello%20World%21'),
+    ]
+    @pytest.mark.parametrize(("template", "fields", "expected"), test_data)
     def test_expand(template, fields, expected):
         assert expand(template, fields) ==  expected
 
@@ -354,6 +379,7 @@ example from http://codeinthehole.com/writing/purl-uri-templates-and-generated-t
 
 re-run tests with different resources
 
+    from databases import MySQL, Postgres
     @pytest.fixture(params=[MySQL(), Postgres()])
     def db(request):
         return request.param
@@ -373,16 +399,17 @@ nose
     from nose.tools import nottest
 
     @nottest
-    def test_my_sample_test()
-        #code here ...
+    def test_my_sample_test():
+        pass
 
 pytest
 
+    from databases import MySQL, Postgres
     db_params = (
         MySQL(),
         pytest.mark.xfail(Postgres(), reason="psql not supported yet")
     )
-    @pytest.fixture(params=db_parms)
+    @pytest.fixture(params=db_params)
     def db(request):
         return request.param
 

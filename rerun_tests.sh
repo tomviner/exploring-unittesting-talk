@@ -1,1 +1,1 @@
-rerun "py.test test_examples.py"
+rerun "py.test code-examples/test_examples.py"
