@@ -10,15 +10,8 @@ A PyConUK talk by [Tom Viner](http://tomviner.co.uk) /
 
 - Our three test frameworks
 - Some features of unit-testing
-    - running your tests
-    - a minimal test
-    - setting up the environment for a test
-    - happy path
-    - provoking failure
 - Advanced techniques
-    - parameterised test generators
-    - skipping and xfails
-    - next level: marking your params
+- Conclusions
 
 ---
 
@@ -29,11 +22,12 @@ Our three test frameworks
 # unittest
 
 - sometimes called PyUnit
-    - standard library since Python 2.1
-- `xUnit`/Kent Beck (creator of XP, one of the fathers of Test-Driven-Design) origins:
+    - standard library since Python 2.1 (2001)
+- `xUnit` / Kent Beck *(creator of XP, one of the fathers of Test-Driven-Design) origins:*
 
-    "Kent wants people to control their own environment, so he liked to have each team build the framework themselves (it only took a couple of hours), that way they would feel happy to change it to suit their particular circumstances"
-    http://www.martinfowler.com/bliki/Xunit.html
+    *"Kent wants people to control their own environment, so he liked to have each team build the framework themselves (it only took a couple of hours), that way they would feel happy to change it to suit their particular circumstances"
+    http://www.martinfowler.com/bliki/Xunit.html*
+- updated (codename *unittest2*) in python 2.7/3.2 with extra features
 
 
 # py.test
@@ -45,11 +39,12 @@ Our three test frameworks
 # nose
 
 - *extends `unittest` to make testing easier*
-- About the name:
-    - nose is the least silly short synonym for discover in the dictionary.com thesaurus that does not contain the word ‘spy.’
-    - Pythons have noses
-    - The nose knows where to find your tests
+- about the name:
     - **Nose Obviates Suite Employment**
+- there is a `nose2` but I'm not covering it here
+    -- get's 90x fewer downloads
+- nose was originally created as a clone of pytest
+
 ---
 
 Features of unit-testing
@@ -75,31 +70,32 @@ How should we test this silly example?
 
 ### nose
 
-    import nose
+    from nose.tools import eq_
 
     def test_add():
-        nose.tools.assert_equal(add(1, 1), 2)
+        eq_(add(1, 1), 2)
 
 ### pytest
+
+    # no need to: import pytest
 
     def test_add():
         assert add(1, 1) == 2
 
-
+---
 
 ## running your tests from the command line
 
 ### unittest
+Note the new discover command
 
     $ python -m unittest test_unittest_examples.TestAdd
+    $ python -m unittest discover -s tests/
 
 ### nose
 
     $ nosetests test_unittest_examples:TestAdd
     $ nosetests test_nose_examples.py
-
-    $ nose2 test_unittest_examples.TestAdd
-    $ nose2 test_nose_examples
 
 ### pytest
 
@@ -107,9 +103,20 @@ How should we test this silly example?
     $ py.test test_nose_examples.py
     $ py.test test_pytest_examples.py
 
-Note the default is to find `by/file/path` not `dotted.module.path`, so your shell tab complete works
+- Note it's worth learning the options of whatever tool you use
+- Note notice all 3 frameworks can run `unittest.Testcase`s
+    and additionally pytest can run most `nose` tests
+
+---
+
+# testing in 3 steps
+
+- ## arrange
+- ## act
+- ## assert
 
 
+# arrange
 ## setting up the environment for a test, and clearing up afterwards
 
 
@@ -138,6 +145,7 @@ Setup per test class:
 
 Setup per module:
 
+    # unittesting
     def setUpModule():
         createConnection()
 
@@ -243,18 +251,31 @@ Alternate syntax to use a yield fixture
         print ("teardown smtp")
         smtp.close()
 
+---
 
 ## happy path: asserting the expected truth
 unittest
 
+    # unittest
     self.assertTrue
     self.assertEqual
     self.assertIsNotNone
     self.assertGreaterEqual
 
+    self.assertAlmostEqual
+    self.assertItemsEqual
+    # self.assertRegexpMatches(text, regexp)
+    # self.assertDictContainsSubset(subset, full)
+
+    # make more with addTypeEqualityFunc(type, function)
+
 nose
 
     nose.tools.assert_greater_equal(result, expected)
+
+    nose.tools.ok_
+    nose.tools.eq_
+
 
 pytest
 
@@ -265,6 +286,10 @@ pytest
     assert result2 != expected
     a, b = 3, -1
     assert add(a, b) + add(b, b) == expected
+
+- much simpler, no self.assertX methods to remember
+- have to implement things like assertAlmostEqual yourself
+    -- or use a plugin like (pytest-raisesregexp)[https://github.com/Walkman/pytest-raisesregexp]
 
 
 ### pytest naked assert
@@ -281,16 +306,42 @@ Test result
             a = 1
             b = 2
             expected = 4
-    # >       assert add(a, b) + add(b, b) == expected
-    # E       assert (3 + 4) == 4
-    # E        +  where 3 = add(1, 2)
-    # E        +  and   4 = add(2, 2)
-    #
-    # test_pytest_examples.py:12: AssertionError
+    >       assert add(a, b) + add(b, b) == expected
+    E       assert (3 + 4) == 4
+    E        +  where 3 = add(1, 2)
+    E        +  and   4 = add(2, 2)
 
+    test_pytest_examples.py:12: AssertionError
 
+---
 
 ## provoking failure: ensuring exceptions raised
+
+all 3 frameworks provide context managers
+
+unittest
+
+    class TestAdd(unittest.TestCase):
+        def test_validation(self):
+            with self.assertRaises(TypeError) as e:
+                add('a', 1)
+
+    # self.assertRaisesRegexp(FooBarError, msg_re)
+
+nose
+
+    def test_validation_with():
+        with nose.tools.assert_raises(TypeError):
+            add('a', 1)
+
+pytest
+
+    def test_validation():
+        with pytest.raises(TypeError):
+            add('a', 1)
+
+
+No need to use the other versions:
 
 unittest
 
@@ -300,29 +351,24 @@ unittest
 
 nose
 
-    def test_validation():
-        nose.tools.assert_raises(TypeError, add, ('a', 1))
-
     @nose.tools.raises(TypeError)
-    def test_validation():
+    def test_validation_decorator():
         add('a', 1)
 
     def test_validation():
-        with nose.tools.raises(TypeError):
-            add('a', 1)
+        nose.tools.assert_raises(TypeError, add, ('a', 1))
 
+<!--
+test message with a regex
 
-pytest
-
-    def test_validation():
-        with pytest.raises(TypeError):
-            add('a', 1)
-
+    msg_re = "^You shouldn't Foo a Bar$"
+    with self.assertRaisesRegexp(FooBarError, msg_re) as e:
+        foo_the_bar()
+ -->
 ---
 
 Advanced techniques
 ===================
-## not available in all 3 frameworks
 
 
 ## parameterised test generators
@@ -335,45 +381,22 @@ Advanced techniques
 
 ### nose
 
-    import purl
-    from nose.tools import eq_
+    def test_evens():
+        for i in range(0, 5):
+            yield check_even, i, i*3
 
-    level1_vars = {
-        'var': 'value',
-        'hello': 'Hello World!',
-    }
-
-    # Tuples of (template, bindings, expected URI)
-    test_data = [
-        ('{var}', level1_vars, 'value'),
-        ('{hello}', level1_vars, 'Hello%20World%21'),
-    ]
-
-    def assert_expansion(template, fields, expected):
-        eq_(purl.expand(template, fields), expected)
-
-    def test_expansion():
-        for template, fields, expected in test_data:
-            yield assert_expansion, template, fields, expected
-
-example from http://codeinthehole.com/writing/purl-uri-templates-and-generated-tests/
+    def check_even(n, nn):
+        assert n % 2 == 0 or nn % 2 == 0
 
 
 ### pytest
 
-    import pytest
-    level1_vars = {
-        'var': 'value',
-        'hello': 'Hello World!',
-    }
-    test_data = [
-        ('{var}', level1_vars, 'value'),
-        ('{hello}', level1_vars, 'Hello%20World%21'),
-    ]
-    @pytest.mark.parametrize(("template", "fields", "expected"), test_data)
-    def test_expand(template, fields, expected):
-        assert expand(template, fields) ==  expected
+    @pytest.mark.parametrize("n", range(0, 5))
+    def test_evens():
+        nn = n * 3
+        assert n % 2 == 0 or nn % 2 == 0
 
+---
 
 ### Paramatisation of fixtures
 
@@ -385,7 +408,41 @@ re-run tests with different resources
         return request.param
 
 
-## skipping and xfails
+## skipping tests
+
+### Why we might want to skip certain tests?
+
+
+unittest
+
+    class MyTestCase(unittest.TestCase):
+
+        @unittest.skip("demonstrating skipping")
+        def test_nothing(self):
+            self.fail("shouldn't happen")
+
+nose
+
+    from nose.tools import nottest
+
+    @nottest
+    def test_my_sample_test():
+        pass
+
+pytests
+
+    import sys
+    @pytest.mark.skipif(sys.version_info < (3,3),
+                        reason="requires python3.3")
+    def test_function():
+        pass
+
+
+## expected failures
+
+### Why we might want to xfail certain tests?
+
+
 unittest
 
     class MyTestCase(unittest.TestCase):
@@ -404,6 +461,13 @@ nose
 
 pytest
 
+    xxx
+
+
+## using skips and xfail on paramaters
+
+pytest only
+
     from databases import MySQL, Postgres
     db_params = (
         MySQL(),
@@ -413,14 +477,13 @@ pytest
     def db(request):
         return request.param
 
+---
 
-## testing the code in this talk
+# Conclusions
 
-- live demo!
+---
 
+I've been [@tomviner](twitter.com/tomviner)*, any:
+# Questions?
 
-More for another talk
-=====================
-- Marking your params
-- Django Integration
-- Integration with `python setup.py test`
+\* link to slides has been tweeted
