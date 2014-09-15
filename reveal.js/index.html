@@ -42,7 +42,25 @@
 
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
-				<section data-markdown="talk-draft.md"
+				<section data-markdown="talk-start.md"
+						 data-separator="^---"
+						 data-vertical="^\n\n"
+						 data-not="^\s*?--\s(.*?)$"
+						 data-not-attributes="\{\.\s*?([^}]+?)\}"
+						 data-not-element-attributes="\{\.\.\s*?([^}]+?)\}"
+						 data-notes="^Note:"
+						 data-charset="utf-8">
+				</section>
+				<section data-markdown="talk-features.md"
+						 data-separator="^---"
+						 data-vertical="^\n\n"
+						 data-not="^\s*?--\s(.*?)$"
+						 data-not-attributes="\{\.\s*?([^}]+?)\}"
+						 data-not-element-attributes="\{\.\.\s*?([^}]+?)\}"
+						 data-notes="^Note:"
+						 data-charset="utf-8">
+				</section>
+				<section data-markdown="talk-end.md"
 						 data-separator="^---"
 						 data-vertical="^\n\n"
 						 data-not="^\s*?--\s(.*?)$"

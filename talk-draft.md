@@ -1,1 +1,0 @@
-reveal.js/talk-draft.md
