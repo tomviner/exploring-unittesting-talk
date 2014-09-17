@@ -112,6 +112,9 @@ pytest only
 
 # Conclusions
 
+unittest:
+nose:
+pytest: more pythonic?
 ---
 
 I've been [@tomviner](twitter.com/tomviner)*, any:

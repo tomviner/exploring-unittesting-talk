@@ -38,7 +38,6 @@ How should we test this silly example?
 ## running your tests from the command line
 
 ### unittest
-Note the new discover command
 
     $ python -m unittest test_unittest_examples.TestAdd
     $ python -m unittest discover -s tests/
@@ -54,8 +53,9 @@ Note the new discover command
     $ py.test test_nose_examples.py
     $ py.test test_pytest_examples.py
 
-- Note it's worth learning the options of whatever tool you use
-- Note notice all 3 frameworks can run `unittest.Testcase`s
+Note: the new discover command
+- it's worth learning the options of whatever tool you use
+- notice all 3 frameworks can run `unittest.Testcase`s
     and additionally pytest can run most `nose` tests
 
 ---
@@ -66,16 +66,20 @@ Note the new discover command
 - ## act
 - ## assert
 
+---
 
 # arrange
-## setting up the environment for a test, and clearing up afterwards
+## setting up the environment for a test (and clearing up afterwards)
+
+Note: Code that's necessary but not part of the test
+- share common setup code
 
 
 ### unittest
 
 Setup per test:
 
-    class TestSequenceFunctions(unittest.TestCase):
+    class TestMyDataRow(unittest.TestCase):
 
         def setUp(self):
             self.db_table = make_db_table()
@@ -83,34 +87,44 @@ Setup per test:
         def tearDown(self):
             self.db_table.drop()
 
+- rerun for every test method
+- state is stored on self
+
+Note:
+- only get one `setUp` per class. How would we share
+ some setup code between classes?
+
+
 Setup per test class:
 
-    class Test(unittest.TestCase):
+    class TestMyDataRow(unittest.TestCase):
         @classmethod
         def setUpClass(cls):
-            cls._connection = createExpensiveConnectionObject()
+            cls._connection = create_expensive_connection_object()
 
         @classmethod
         def tearDownClass(cls):
             cls._connection.destroy()
 
-Setup per module:
+can do per module with `setUpModule` / `tearDownModule`
 
-    # unittesting
-    def setUpModule():
-        createConnection()
-
-    def tearDownModule():
-        closeConnection()
+Note: beware breaking test isolation
 
 
-Unittest2 (i.e. unittest in Python>=2.7) adds:
+recent version of unittest adds:
 
-    class TestSequenceFunctions(unittest.TestCase):
+    class TestMyDataRow(unittest.TestCase):
 
         def setUp(self):
             self.db_table = make_db_table()
             self.addCleanup(self.db_table.drop)
+
+            # addCleanup with args:
+            self.addCleanup(self.db_table.drop, fast=True)
+
+Note: add multiple cleanups as you go
+- pass in args to applied to the function
+- no tearDown required
 
 
 nose
@@ -118,38 +132,100 @@ nose
     from nose.tools import with_setup
 
     def setup_func():
-        "set up test fixtures"
+        db_table = make_db_table()
 
     def teardown_func():
-        "tear down test fixtures"
+        db_table.drop()
 
     @with_setup(setup_func, teardown_func)
-    def test():
+    def test_table():
         "test ..."
+        # um, I don't have access to db_table
+
+Note: it really looks like you could return it and add an arg to the test
+- so only use functions for very simple testing. pytest... fully functional test functions
 
 
 pytest
 
     @pytest.fixture
-    def smtp():
-        import smtplib
-        return smtplib.SMTP("merlinux.eu")
+    def db_table():
+        return make_db_table()
 
-    def my_test(smtp):
-        assert smtp.connected
+    def test_table(db_table):
+        db_table.do_sql_to_the_things()
 
-- dependancy injection
-- can be a function or method
-- chainable
+Note:
+    - no setUp, no self, variables are returned
+    - dependancy injection by **function argument**
+    - can be a function or method
+    - by default still run for every test, but also cachable...
+    - more pythonic?
+
+
+## pytest fixture finalizers
+
+    @pytest.fixture
+    def db_table(request):
+        db_table = make_db_table()
+        request.addfinalizer(db_table.drop) # can't pass args
+        return db_table
+
+Note: - like unittests addCleanup
+- what about more complicated cleaning up?
+
+
+## pytest fixture finalizers
+
+    @pytest.fixture
+    def db_table(request):
+        db_table = make_db_table()
+        def clean_db_up():
+            db_table.drop(fast=True)
+        request.addfinalizer(clean_db_up)
+        return db_table
+
+Alternate syntax to use a yield fixture
+
+    @pytest.yield_fixture
+    def db_table():
+        db_table = make_db_table()
+        yield db_table
+        db_table.drop(fast=True)
+
+Note: this is like creating a context manager aka an object you use **with**
+
+
+## more about pytest fixtures
+
+- singular purpose
+    - use as many as you need
 - cachable
-
-
-## pytest fixtures
-
-- cachable via `scope` over session/module/function (default)
 - chainable
 
-Fixture runs once per test run:
+
+### cachable
+
+    @pytest.fixture(scope='session')
+    def db_conn():
+        return create_db_conn()
+
+- via `scope` argument
+- run once per:
+    - function (default)
+    - cls
+    - module
+    - session
+
+Note: - this fixture runs once per test session
+    - like the setUp level with unittest
+
+
+
+
+### chainable
+
+Fixture runs once per test session:
 
     @pytest.fixture(scope='session')
     def db_conn():
@@ -169,38 +245,16 @@ Then just name the 2nd fixture as a *funcarg*:
 
 ## pytest fixtures
 
+
 - benefits over `unittest.TestCase.setUp`
     - no need to use a class
-    - run only when required - use `autouse=True` if you really want to always run
+    - run only when required - use
+    - `autouse=True` if you really want to always run
     - able to separate setUp tasks into multiple fixtures.
     - with TestCase you must group by common setUp, with pytest you can group by related tests
     - reusable beyond a single class, possibly even share between projects
 
 
-## pytest fixture finalizers
-
-    @pytest.fixture(scope="module")
-    def smtp(request):
-        smtp = smtplib.SMTP("merlinux.eu")
-        def fin():
-            print ("teardown smtp")
-            smtp.close()
-        request.addfinalizer(fin)
-        return smtp  # provide the fixture value
-
-Alternate syntax to use a yield fixture
-
-    @pytest.yield_fixture(scope="module")
-    def smtp(): # no request required
-        smtp = smtplib.SMTP("merlinux.eu")
-
-        # provide the fixture value
-        yield smtp
-        # now test is run
-
-        # after the yield, is the finalizer code
-        print ("teardown smtp")
-        smtp.close()
 
 ---
 
