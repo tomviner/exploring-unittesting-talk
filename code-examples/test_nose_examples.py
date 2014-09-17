@@ -32,4 +32,21 @@ def teardown_func():
 @with_setup(setup_func, teardown_func)
 def test():
     "test ..."
-    assert  7
+    assert 1
+
+
+
+
+class TestStuff:
+
+    def setup_func(self):
+        self.db_table = make_db_table()
+
+    def teardown_func(self):
+        self.db_table.drop()
+
+    @with_setup(setup_func, teardown_func)
+    def test_table(self):
+        "test ..."
+        # um, I don't have access to db_table
+        assert self.db_table

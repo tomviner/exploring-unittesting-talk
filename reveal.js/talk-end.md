@@ -46,7 +46,7 @@ Then
 ### pytest
 
     @pytest.mark.parametrize("n", range(0, 5))
-    def test_evens():
+    def test_evens(n):
         nn = n * 3
         assert n % 2 == 0 or nn % 2 == 0
 
@@ -161,11 +161,11 @@ Note: -
 - more pythonic?
 - rich ecosystem of plugins
     - xdist - parallelise your test runs
+    - pytest-django - run Django DB tests without Django's `TestCase`
 
 ---
 
 I've been [@tomviner](twitter.com/tomviner), any
 # Questions?
 
-<!-- \* link to slides has been tweeted -->
-(slides on the wiki)
+\* link to slides (made with reveal.js btw) has been tweeted

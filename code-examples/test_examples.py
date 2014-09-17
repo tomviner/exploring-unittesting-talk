@@ -45,6 +45,7 @@ def get_python_snippets(fn=None):
             and not 'Error' in snip and '.py ' not in snip]
 
 
+@pytest.skip
 def test_get_console_snippets_simple():
     snips = get_console_snippets(fn='./test_example_simple.md')
     expected = ["unwanted, non-python, console line", "console more"]

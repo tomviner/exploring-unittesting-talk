@@ -131,16 +131,18 @@ nose
 
     from nose.tools import with_setup
 
-    def setup_func():
-        db_table = make_db_table()
+    class TestStuff:
 
-    def teardown_func():
-        db_table.drop()
+        def setup_func(self):
+            self.db_table = make_db_table()
 
-    @with_setup(setup_func, teardown_func)
-    def test_table():
-        "test ..."
-        # um, I don't have access to db_table
+        def teardown_func(self):
+            self.db_table.drop()
+
+        @with_setup(self, setup_func, teardown_func)
+        def test_table():
+            "test ..."
+            # um, I don't have access to db_table
 
 Note: it really looks like you could return it and add an arg to the test
 - so only use functions for very simple testing. pytest... fully functional test functions
@@ -152,7 +154,7 @@ pytest
     def db_table():
         return make_db_table()
 
-    def test_table(db_table):
+    def test_table(db_table, another_fixture, third_fixture):
         db_table.do_sql_to_the_things()
 
 Note:
