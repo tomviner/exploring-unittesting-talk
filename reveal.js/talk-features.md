@@ -218,14 +218,10 @@ Note: this is like creating a context manager aka an object you use **with**
     - session
 
 Note: - this fixture runs once per test session
-    - like the setUp level with unittest
-
-
+    - these are like the setUp level with unittest
 
 
 ### chainable
-
-Fixture runs once per test session:
 
     @pytest.fixture(scope='session')
     def db_conn():
@@ -245,43 +241,48 @@ Then just name the 2nd fixture as a *funcarg*:
 
 ## pytest fixtures
 
-
 - benefits over `unittest.TestCase.setUp`
     - no need to use a class
-    - run only when required - use
+    - run only when required
     - `autouse=True` if you really want to always run
     - able to separate setUp tasks into multiple fixtures.
     - with TestCase you must group by common setUp, with pytest you can group by related tests
     - reusable beyond a single class, possibly even share between projects
 
 
+## An example about testing a spellchecker
 
 ---
 
 ## happy path: asserting the expected truth
 unittest
 
-    # unittest
     self.assertTrue
     self.assertEqual
     self.assertIsNotNone
     self.assertGreaterEqual
 
+    # handy
     self.assertAlmostEqual
     self.assertItemsEqual
-    # self.assertRegexpMatches(text, regexp)
-    # self.assertDictContainsSubset(subset, full)
+    self.assertRegexpMatches(text, regexp)
+    self.assertDictContainsSubset(subset, full)
+
+    # per type
+    self.assertMultiLineEqual
+    self.assertListEqual
 
     # make more with addTypeEqualityFunc(type, function)
 
+
 nose
-
-Note secret: you can use them with other frameworks!
-
-    nose.tools.assert_greater_equal(result, expected)
 
     nose.tools.ok_
     nose.tools.eq_
+
+    nose.tools.assert_greater_equal(result, expected)
+
+Note: Secret: you can use them with other frameworks!
 
 
 pytest
@@ -294,9 +295,11 @@ pytest
     a, b = 3, -1
     assert add(a, b) + add(b, b) == expected
 
+Note:
 - much simpler, no self.assertX methods to remember
 - have to implement things like assertAlmostEqual yourself
-    -- or use a plugin like (pytest-raisesregexp)[https://github.com/Walkman/pytest-raisesregexp]
+    - or use nose.tools.assert_yay_no_camel_case
+    - or use a plugin like (pytest-raisesregexp)[https://github.com/Walkman/pytest-raisesregexp]
 
 
 ### pytest naked assert
@@ -322,9 +325,11 @@ Test result
 
 ---
 
-## provoking failure: ensuring exceptions raised
+## provoking failure:
+### ensuring exceptions raised
 
-all 3 frameworks provide context managers
+Note: often we expect our code to raise exception in certain cases
+
 
 unittest
 
@@ -333,7 +338,7 @@ unittest
             with self.assertRaises(TypeError) as e:
                 add('a', 1)
 
-    # self.assertRaisesRegexp(FooBarError, msg_re)
+            self.assertRaisesRegexp(FooBarError, msg_re)
 
 nose
 
@@ -346,6 +351,8 @@ pytest
     def test_validation():
         with pytest.raises(TypeError):
             add('a', 1)
+
+Note: all 3 frameworks provide context managers
 
 
 No need to use the other versions:

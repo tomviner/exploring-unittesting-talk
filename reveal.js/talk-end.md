@@ -7,7 +7,30 @@ Advanced techniques
 
 ### unittest
 
-    # insert ammusing example of people trying this with unittest
+    # Adapted from http://stackoverflow.com/a/3772008/15890
+    class TestKnownGood(unittest.TestCase):
+        def __init__(self, input, output):
+            super(TestKnownGood, self).__init__()
+            self.input = input
+            self.output = output
+
+        def runTest(self):
+            self.assertEqual(add(*self.input), self.output)
+
+Then
+
+    def suite():
+        suite = unittest.TestSuite()
+        known_values = [
+            ((1, 2), (3)),
+            ((2, 3), (5)),
+        ]
+        suite.addTests(TestKnownGood(input, output)
+            for input, output in known_values)
+        return suite
+
+    if __name__ == '__main__':
+        unittest.TextTestRunner().run(suite())
 
 
 ### nose
@@ -27,7 +50,6 @@ Advanced techniques
         nn = n * 3
         assert n % 2 == 0 or nn % 2 == 0
 
----
 
 ### Paramatisation of fixtures
 
@@ -38,10 +60,14 @@ re-run tests with different resources
     def db(request):
         return request.param
 
+---
 
 ## skipping tests
 
 ### Why we might want to skip certain tests?
+
+Note: - TDD and our test too far ahead
+- Or certain lib versions we don't support:
 
 
 unittest
@@ -49,6 +75,8 @@ unittest
     class MyTestCase(unittest.TestCase):
 
         @unittest.skip("demonstrating skipping")
+        @unittest.skipIf(mylib.__version__ < (1, 3),
+                             "not supported in this library version")
         def test_nothing(self):
             self.fail("shouldn't happen")
 
@@ -73,26 +101,22 @@ pytests
 
 ### Why we might want to xfail certain tests?
 
+Note: -mark known issues
+
 
 unittest
 
     class MyTestCase(unittest.TestCase):
 
-        @unittest.skip("demonstrating skipping")
+        @unittest.expectedFailure
         def test_nothing(self):
-            self.fail("shouldn't happen")
-
-nose
-
-    from nose.tools import nottest
-
-    @nottest
-    def test_my_sample_test():
-        pass
+            # bug test
 
 pytest
 
-    # xxx
+    @pytest.mark.xfail(reason="Issue #123")
+    def test_function():
+        # bug test
 
 
 ## using skips and xfail on paramaters
