@@ -271,6 +271,8 @@ unittest
 
 nose
 
+Note secret: you can use them with other frameworks!
+
     nose.tools.assert_greater_equal(result, expected)
 
     nose.tools.ok_

@@ -139,6 +139,8 @@ module.exports = function(grunt) {
 	// Serve presentation locally
 	grunt.registerTask( 'serve', [ 'connect', 'watch' ] );
 
+	grunt.registerTask( 'compileserve', [ 'sass', 'cssmin', 'uglify', 'serve' ] );
+
 	// Run tests
 	grunt.registerTask( 'test', [ 'jshint', 'qunit' ] );
 

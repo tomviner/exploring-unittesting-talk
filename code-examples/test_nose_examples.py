@@ -18,3 +18,18 @@ def test_validation_with():
 @nose.tools.raises(TypeError)
 def test_validation_decorator():
     add('a', 1)
+
+
+from nose.tools import with_setup
+
+def setup_func():
+    "set up test fixtures"
+    return 1
+
+def teardown_func():
+    "tear down test fixtures"
+
+@with_setup(setup_func, teardown_func)
+def test():
+    "test ..."
+    assert  7

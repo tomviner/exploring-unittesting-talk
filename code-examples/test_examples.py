@@ -1,12 +1,13 @@
 import os
 import re
+from glob import glob
 from textwrap import dedent
 
 import markdown
 import pytest
 from pyquery import PyQuery
 
-INPUT_FN = '../talk-draft.md'
+INPUT_FN = '../talk-*.md'
 try:
     os.chdir('./code-examples/')
 except OSError:
@@ -14,12 +15,16 @@ except OSError:
 
 
 def get_code_blocks(fn=INPUT_FN):
-    text = open(fn or INPUT_FN).read().decode('utf-8')
-    html = markdown.markdown(text)
-    dom = PyQuery(html)
-    code_blocks = dom('code')
-    return [block.text.strip() for block in code_blocks
-        if '\n' in block.text] # remove inline code
+    fpaths = glob(fn or INPUT_FN)
+    blocks = []
+    for fpath in fpaths:
+        text = open(fpath).read().decode('utf-8')
+        html = markdown.markdown(text)
+        dom = PyQuery(html)
+        code_blocks = dom('code')
+        blocks.extend(block.text.strip() for block in code_blocks
+            if '\n' in block.text) # remove inline code
+    return blocks
 
 def get_console_snippets(fn=None):
     console_pattern = r'(?:^|\n)\s*\$ '
