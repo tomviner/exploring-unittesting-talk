@@ -136,12 +136,36 @@ pytest only
 
 # Conclusions
 
-unittest:
-nose:
-pytest: more pythonic?
+### unittest
+
+- current *standard* - consistent testing style
+- really handy special assert methods
+    - assertAlmostEqual
+    - assertDictContainsSubset
+
+Note: -
+
+
+### nose
+
+- if you're happy writing test classes, great test runner
+- some cool tools built in, like @timed decorator
+- liberates unittest's assert methods, for everyone to use
+- rich ecosystem of plugins
+
+
+### pytest
+
+- group methods purely by the feature they test
+- modular fixture system
+- more pythonic?
+- rich ecosystem of plugins
+    - xdist - parallelise your test runs
+
 ---
 
-I've been [@tomviner](twitter.com/tomviner)*, any:
+I've been [@tomviner](twitter.com/tomviner), any
 # Questions?
 
-\* link to slides has been tweeted
+<!-- \* link to slides has been tweeted -->
+(slides on the wiki)
