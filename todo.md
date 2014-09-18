@@ -8,3 +8,6 @@ nothing v plugins
 
 
 Why: skip, xfail
+
+
+unittest + nose = a great combination
