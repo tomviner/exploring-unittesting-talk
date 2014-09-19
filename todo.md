@@ -11,3 +11,4 @@ Why: skip, xfail
 
 django plugin?
 
+unittest + nose = a great combination

@@ -106,7 +106,7 @@ module.exports = function(grunt) {
 				files: [ 'index.html', '*.md', 'css/theme/custom.css' ]
 			},
 			main: {
-				files: [ 'Gruntfile.js', 'js/reveal.js', 'css/reveal.css' ],
+				files: [ 'Gruntfile.js', 'js/*.js', 'css/*.css' ],
 				tasks: 'default'
 			},
 			theme: {
