@@ -1,7 +1,12 @@
-# unittest v pytest: FIGHT!
+## Exploring unit-testing
+## with unittest, nose and pytest
 
-### version one of this talk put 7 people in a coma
-### I'm aiming for 5 or less this time
+A PyConUK talk by [Tom Viner](http://tomviner.co.uk) /
+[@tomviner](http://twitter.com/tomviner)
+
+---
+
+# unittest v pytest: FIGHT!
 
 A PyConUK talk by [Tom Viner](http://tomviner.co.uk) /
 [@tomviner](http://twitter.com/tomviner)
@@ -12,7 +17,7 @@ A PyConUK talk by [Tom Viner](http://tomviner.co.uk) /
 
 # in the red corner we have: `UNITTEST`
 
-- this heavyweight fighter has been around for over 15 years!
+Note: - this heavyweight fighter has been around for over 15 years!
 - was welcomed into the family, of the standard library, since Python 2.1
 - this is a fighter with heritage
     - unittest's nickname gives it away: PyUnit
@@ -25,7 +30,7 @@ A PyConUK talk by [Tom Viner](http://tomviner.co.uk) /
 
 # in the blue corner we have our challenger: PYTEST
 
-- this new kid on the block is here to make changes
+Note: - this new kid on the block is here to make changes
 - trainer by Holger Krekel
 - `pytest` grew up, and broke away from the original `py` family
     - only the sentimental still call it py **dot** test
@@ -36,7 +41,7 @@ A PyConUK talk by [Tom Viner](http://tomviner.co.uk) /
 
 # THERE HAS BEEN A DISQUALIFICATION!
 
-- Years ago, another fighter was born into this battle
+Note: - Years ago, another fighter was born into this battle
 - They call this one **nosetests**, and it came of an early pytest
 - The result is that they cover slightly different spaces now...
 - and so I have to announce that **nose** has been disqualified from this talk
@@ -50,7 +55,7 @@ A PyConUK talk by [Tom Viner](http://tomviner.co.uk) /
 - ## act
 - ## assert
 
-- 3 **a**'s
+Note: - 3 **a**'s
 - 3 segments of testing
 - seconds out, ding diiiing!
 
@@ -61,7 +66,7 @@ A PyConUK talk by [Tom Viner](http://tomviner.co.uk) /
 - getting things ready to act
 - (and clearing the mess up afterward)
 
-- prepare data
+Note: - prepare data
 - initalise objects
 - gentle mocking
 
@@ -88,14 +93,14 @@ A PyConUK talk by [Tom Viner](http://tomviner.co.uk) /
         def tearDown(self):
             self.db_table.drop()
 
-- standard unittest
+Note: - standard unittest
 - state is stored on self
 - rerun for every test method
 
 
 <!-- --- data-background="#adf" -->
 
-### Arrange using @fixture function
+### Arrange using @fixture functions
 
     # Arrange
     @pytest.fixture
@@ -109,7 +114,7 @@ A PyConUK talk by [Tom Viner](http://tomviner.co.uk) /
         # Assert
         assert success
 
-- no setUp, no self, no class
+Note: - no setUp, no self, no class
 - (Django: no fixture file!)
 - variables are returned
 - test **function argument** connects
@@ -155,7 +160,7 @@ So how would this run, with 3 test methods?
     tearDownClass
 <!-- -- class="fragment" -->
 
-- only make the db connection once
+Note: - only make the db connection once
 - keep test isolation
 
 
@@ -176,7 +181,7 @@ So how would this run, with 3 test methods?
     def test_one(db_table):
         ...
 
-- chainable
+Note: - chainable
 - cachble via `scope` argument
 - run once per:
     - function (default)
@@ -186,12 +191,12 @@ So how would this run, with 3 test methods?
 
 ---
 
-### what about if we could made a todo list of the clean ups required as we went along?
+### what about making a todo list of clean ups as we went along?
 
 
 <!-- --- data-background="#fad" -->
 
-### shed a tearDown
+### don't shed a tearDown
 
     class TestMyDataRow(unittest.TestCase):
 
@@ -199,7 +204,7 @@ So how would this run, with 3 test methods?
             self.db_table = make_db_table()
             self.addCleanup(self.db_table.drop)
 
-- add multiple cleanups as you go
+Note: - add multiple cleanups as you go
     - great for modular cleanup
 - no tearDown required
 
@@ -225,29 +230,44 @@ neat alternative: the yield_fixture
         db_table.drop(fast=True)
 <!-- -- class="fragment" data-fragment-index="2" -->
 
-- like unittest's addCleanup
+Note: - like unittest's addCleanup
 - what about more complicated cleaning up?
 - neat alternative - like context manager
     - no tearDown and no addCleanup/addfinalizer
+
+
+### fixture have loads more features:
+### Paramatisation of fixtures
+
+re-run tests with different resources
+
+    from databases import MySQL, Postgres
+    @pytest.fixture(params=[MySQL(), Postgres()])
+    def db(request):
+        return request.param
 
 ---
 
 # round 1 over!
 ### how did you score the two fighters on Arrange?
 
-- Advanced py.test Fixtures (Floris Bruynooghe) in CC1.4
+- unittest: setUp
+- pytest: fixtures
+-- Advanced py.test Fixtures (Floris Bruynooghe) in CC1.4
+
 ---
 
 <!-- --- data-background="css/swiss.png" -->
 
 # round 2: act
 
-- time for a swiss intervention
-- as a half swiss, not everything has to be violent you know
+Note: - time for a swiss intervention
+- as a half swiss, not everything has to be about battling, violence you know
 - round 2 **act** is neutral to which framework
 - so relax
-- call your live code
+- call your live code,
 - some code you want to test (we call this the *System Under Test* btw)
+- that's all I can say about **act**
 
 ---
 
@@ -261,19 +281,120 @@ neat alternative: the yield_fixture
 
 # round 3: assert
 
-- verify what happened
+Note: - verify what happened
 - was exactly the right data returned?
 - did the correct **side-effect** occur?
 
 ---
 
+# assert: part i
+## happy path: asserting the expected truth
+
+
+# unittest assertMethods
+
+### unittest.assertIreallyLoveMyAssertMethods!
+
+
 <!-- --- data-background="css/unittest-asserts-tall.png" -->
 
-# unittest loves its assertMethods!
+
+<!-- --- data-background="#fad" -->
+
+core of basic asserts
+
+    self.assertTrue(x)
+    self.assertEqual(x, y)
+    self.assertIsNotNone(result)
+    self.assertGreaterEqual(four, five)
+
+per type - no need to remember <!-- -- class="fragment" data-fragment-index="2" -->
+
+    self.assertMultiLineEqual(s1, s2)
+    self.assertListEqual(l1, l2)
+    ...
+
+    # make more with addTypeEqualityFunc(type, function
+
+<!-- -- class="fragment" data-fragment-index="2" -->
+
+handy <!-- -- class="fragment" data-fragment-index="3" -->
+
+    self.assertAlmostEqual(a, b)
+    self.assertRegexpMatches(text, regexp)
+    self.assertDictContainsSubset(subset, full)
+
+<!-- -- class="fragment" data-fragment-index="3" -->
 
 
-# unittest loves its assertMethods!
+<!-- --- data-background="#adf" -->
+
+## pytest naked assert
+
+    assert result == expected
+    assert result2 != expected
+    assert x is not None
+    assert y >= z
+    assert dict1 == dict2
+
+Note:
+- much simpler, no self.assertX methods to remember
+- have to implement things like assertAlmostEqual yourself
+    - or use a plugin like (pytest-raisesregexp)[https://github.com/Walkman/pytest-raisesregexp]
 
 
-nose makes an appearence!
-unittest + nose = better together
+## nose makes an entry
+
+    nose.tools.assert_yay_no_camel_case
+    nose.tools.assert_almost_equal(x, y)
+
+Note: - pulled out of unittest
+- better together
+
+
+<!-- --- data-background="#adf" -->
+
+### pytest naked assert
+
+    def test_add():
+        a = 1
+        b = 2
+        expected = 4
+        assert add(a, b) + add(b, b) == expected
+
+Test result
+
+        def test_add():
+            a = 1
+            b = 2
+            expected = 4
+    >       assert add(a, b) + add(b, b) == expected
+    E       assert (3 + 4) == 4
+    E        +  where 3 = add(1, 2)
+    E        +  and   4 = add(2, 2)
+
+    test_pytest_examples.py:12: AssertionError
+
+---
+
+# assert: part ii
+## provoking failure:
+### ensuring exceptions raised
+
+Note: often we expect our code to raise exception in certain cases
+
+
+unittest
+
+    class TestAdd(unittest.TestCase):
+        def test_validation(self):
+            with self.assertRaises(TypeError) as e:
+                add('a', 1)
+
+            self.assertRaisesRegexp(FooBarError, msg_re)
+
+pytest
+
+    def test_validation():
+        with pytest.raises(TypeError):
+            add('a', 1)
