@@ -13,6 +13,9 @@ How should we test this silly example?
 
 ### unittest
 
+    def add(a, b):
+        return a + b
+
     import unittest
 
     class TestAdd(unittest.TestCase):

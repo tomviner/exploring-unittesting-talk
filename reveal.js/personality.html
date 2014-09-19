@@ -36,21 +36,30 @@
 		<![endif]-->
 	</head>
 
-	<body class="!debug-notes">
+	<body class="debug-notes">
 
 		<div class="reveal">
 
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
-				<section data-markdown="talk-with-personality.md"
-						 data-separator="^---"
-						 data-vertical="^\n\n"
-						 data-not="^\s*?--\s(.*?)$"
-						 data-not-attributes="\{\.\s*?([^}]+?)\}"
-						 data-not-element-attributes="\{\.\.\s*?([^}]+?)\}"
-						 data-notes="^Note:"
-						 data-charset="utf-8">
-				</section>
+<section
+	data-markdown="talk-with-personality.md"
+	data-separator="^---"
+	data-vertical="^\n\n"
+	data-attributes="---\s(.*?)$"
+	data-element-attributes="--\s(.*?)$"
+	data-notes="^Note:"
+	data-charset="utf-8">
+</section>
+<section
+	data-markdown="talk-with-conclusion.md"
+	data-separator="^---"
+	data-vertical="^\n\n"
+	data-attributes="---\s(.*?)$"
+	data-element-attributes="--\s(.*?)$"
+	data-notes="^Note:"
+	data-charset="utf-8">
+</section>
 <!-- 				<section data-markdown="talk-features.md"
 						 data-separator="^---"
 						 data-vertical="^\n\n"
@@ -102,7 +111,8 @@
 					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
 					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
 					{ src: '//'+location.hostname+':35729/livereload.js', async: true },
-					{ src: 'js/jquery.1.10.2.min.js', async: true }
+					{ src: 'js/jquery.1.10.2.min.js', async: false },
+					{ src: 'js/personality.js', async: true }
 				]
 			});
 
